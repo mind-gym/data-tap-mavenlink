@@ -2,7 +2,7 @@
 
 from setuptools import setup, find_packages
 
-setup(name='tap-mavenlink',
+setup(name='data-tap-mavenlink',
       version='0.0.3',
       description='Singer.io tap for extracting data from the Mavenlink API',
       author='Fishtown Analytics',
@@ -12,6 +12,11 @@ setup(name='tap-mavenlink',
       install_requires=[
           'tap-framework==0.0.4',
       ],
+      extras_require={
+          'dev': [
+              'pytest'
+          ]
+      },
       entry_points='''
           [console_scripts]
           tap-mavenlink=tap_mavenlink:main

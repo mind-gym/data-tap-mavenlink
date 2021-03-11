@@ -87,7 +87,6 @@ class BaseStream(base):
                 params['page'] += 1
 
     def save_state(self, last_record):
-        # TODO is this overkill since we know we don't have compisite keys here?
         if self.replication_key in last_record:
             latest_value = last_record[self.replication_key]
             self.state = incorporate(self.state, self.TABLE, self.replication_key, latest_value)

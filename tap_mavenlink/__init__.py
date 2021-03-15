@@ -7,6 +7,7 @@ from tap_framework.state import save_state
 
 from tap_mavenlink.client import MavenlinkClient
 from tap_mavenlink.streams import AVAILABLE_STREAMS
+from tap_mavenlink.utils import validate_args
 
 LOGGER = singer.get_logger()  # noqa
 
@@ -39,12 +40,10 @@ class MavenlinkRunner(tap_framework.Runner):
                              .format(stream.TABLE))
                 raise e
 
-        save_state(self.state)
-
-
 @singer.utils.handle_top_exception(LOGGER)
 def main():
     args = singer.utils.parse_args(required_config_keys=['token'])
+    args = validate_args(args)
     client = MavenlinkClient(args.config)
     runner = MavenlinkRunner(args, client, AVAILABLE_STREAMS)
 

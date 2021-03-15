@@ -13,13 +13,20 @@ from tap_mavenlink.state import incorporate, save_state, \
 
 from tap_framework.streams import BaseStream as base
 
+from tap_mavenlink.utils import get_stream_metadata
 
 LOGGER = singer.get_logger()
-
 
 class BaseStream(base):
     KEY_PROPERTIES = ['id']
     CACHE = False
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.stream_metadata = get_stream_metadata(self.catalog.to_dict())
+        self.replication_method = self.stream_metadata.get('replication-method')
+        self.replication_key = self.stream_metadata.get('replication-key')
 
     def get_extra(self, parent_id):
         return {}
@@ -35,6 +42,17 @@ class BaseStream(base):
             'page': page_number,
             'per_page': per_page
         }
+
+        if self.replication_method == 'INCREMENTAL' and self.replication_key == 'updated_at':
+            params.update({
+                'order': f'{self.replication_key}'
+            })
+
+            bookmark = get_last_record_value_for_table(self.state, self.TABLE)
+            if bookmark:
+                params.update({
+                    'updated_after': bookmark
+                })
 
         params.update(self.extra_params())
         return params
@@ -61,10 +79,18 @@ class BaseStream(base):
             total_pages = result['meta']['page_count']
             LOGGER.info('Synced page {} of {} for {}'.format(page_number, total_pages, self.TABLE))
 
+            self.save_state(transformed[-1])
+
             if page_number >= total_pages:
                 break
             else:
                 params['page'] += 1
+
+    def save_state(self, last_record):
+        if self.replication_key in last_record:
+            latest_value = last_record[self.replication_key]
+            self.state = incorporate(self.state, self.TABLE, self.replication_key, latest_value)
+            save_state(self.state)
 
     def get_stream_data(self, result, extra):
         payload_dict = result[self.response_key]

@@ -29,4 +29,3 @@ class MavenlinkClient:
             raise RuntimeError(response.text)
 
         return response.json()
-

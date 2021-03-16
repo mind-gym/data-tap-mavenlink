@@ -17,7 +17,6 @@ from tap_mavenlink.streams.users import UsersStream
 from tap_mavenlink.streams.user_custom_field_values import UserCustomFieldValuesStream
 from tap_mavenlink.streams.workspace_allocations import WorkspaceAllocationsStream
 from tap_mavenlink.streams.workspace_groups import WorkspaceGroupsStream
-from tap_mavenlink.streams.workspace_group_custom_field_values import WorkspaceGroupCustomFieldValuesStream
 from tap_mavenlink.streams.workspaces import WorkspacesStream
 
 AVAILABLE_STREAMS = [
@@ -44,7 +43,6 @@ AVAILABLE_STREAMS = [
 
     # Custom field values streams
     WorkspaceCustomFieldValuesStream,
-    WorkspaceGroupCustomFieldValuesStream,
     StoryCustomFieldValuesStream,
     UserCustomFieldValuesStream,
 ]

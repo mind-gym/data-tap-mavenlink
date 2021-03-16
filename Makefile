@@ -12,6 +12,8 @@ VENV := ./.venv
 VENV_DEV := $(VENV)/dev
 VENV_BUILD := $(VENV)/build
 
+# PHONY
+# =========================================================================
 .PHONY: help clean build upload test
 
 ## help                    : PHONY, provides help
@@ -33,6 +35,8 @@ clean:
 	rm -rf *.egg-info
 	rm -rf $(VENV)
 
+# Install
+# =========================================================================
 ## tmp/.sentinel.venv-dev  : installs virtual environment for dev
 tmp/.sentinel.venv-dev: setup.py pyproject.toml
 	@mkdir -p $(@D)
@@ -53,6 +57,16 @@ tmp/.sentinel.venv-build: setup.py pyproject.toml
 	$(VENV_BUILD)/bin/pip install --upgrade pip build twine
 	touch $@
 
+# Checks
+# =========================================================================
+## tmp/.sentinel.test      : runs pytest
+tmp/.sentinel.test: tmp/.sentinel.venv-dev $(SRC) $(TESTS)
+	@mkdir -p $(@D)
+	$(VENV_DEV)/bin/pytest
+	touch $@
+
+# Build & Upload
+# =========================================================================
 ## tmp/.sentinel.build     : creates a source & binary distribution
 tmp/.sentinel.build: tmp/.sentinel.venv-build $(SRC)
 	@mkdir -p $(@D)
@@ -69,10 +83,4 @@ tmp/.sentinel.upload: tmp/.sentinel.build
 		--password . \
 		--repository-url $(PYPISERVER_URL) \
 		dist/*
-	touch $@
-
-## tmp/.sentinel.test      : runs pytest
-tmp/.sentinel.test: tmp/.sentinel.venv-dev $(SRC) $(TESTS)
-	@mkdir -p $(@D)
-	$(VENV_DEV)/bin/pytest
 	touch $@

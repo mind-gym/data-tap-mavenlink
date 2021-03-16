@@ -30,25 +30,27 @@ def validate_args(args):
             except ValueError:
                 raise ValueError("Unable to parse as datetime.")
 
-    streams = args.catalog.to_dict()['streams']
+    if args.catalog:
 
-    for stream in streams:
-        metadata = get_stream_metadata(stream)
-        replication_method = metadata.get('replication-method')
-        replication_key = metadata.get('replication-key')
+        streams = args.catalog.to_dict()['streams']
 
-        if replication_key is not None and not isinstance(replication_key, str):
-            raise ValueError(f"Replication key cannot be a composite key; "
-                             f"got {replication_key} for stream {stream}")
+        for stream in streams:
+            metadata = get_stream_metadata(stream)
+            replication_method = metadata.get('replication-method')
+            replication_key = metadata.get('replication-key')
 
-        if replication_method not in ['INCREMENTAL', 'FULL_TABLE', None]:
-            raise ValueError(f"Unknown replication method: {replication_method} for stream {stream}")
+            if replication_key is not None and not isinstance(replication_key, str):
+                raise ValueError(f"Replication key cannot be a composite key; "
+                                 f"got {replication_key} for stream {stream}")
 
-        if replication_method == 'INCREMENTAL' and replication_key is None:
-            raise ValueError(f"Missing replication key for replication key INCREMENTAL for stream {stream}")
+            if replication_method not in ['INCREMENTAL', 'FULL_TABLE', None]:
+                raise ValueError(f"Unknown replication method: {replication_method} for stream {stream}")
 
-        if replication_method in ['FULL_TABLE', None] and replication_key is not None:
-            raise ValueError(f"Unexpected replication key found: {replication_key} for stream {stream}")
+            if replication_method == 'INCREMENTAL' and replication_key is None:
+                raise ValueError(f"Missing replication key for replication key INCREMENTAL for stream {stream}")
+
+            if replication_method in ['FULL_TABLE', None] and replication_key is not None:
+                raise ValueError(f"Unexpected replication key found: {replication_key} for stream {stream}")
 
     return args
 

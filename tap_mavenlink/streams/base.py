@@ -24,9 +24,10 @@ class BaseStream(base):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.stream_metadata = get_stream_metadata(self.catalog.to_dict())
-        self.replication_method = self.stream_metadata.get('replication-method')
-        self.replication_key = self.stream_metadata.get('replication-key')
+        if self.catalog:
+            self.stream_metadata = get_stream_metadata(self.catalog.to_dict())
+            self.replication_method = self.stream_metadata.get('replication-method')
+            self.replication_key = self.stream_metadata.get('replication-key')
 
     def get_extra(self, parent_id):
         return {}

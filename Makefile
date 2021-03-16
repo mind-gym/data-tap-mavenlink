@@ -6,8 +6,8 @@ MAKEFLAGS += --warn-undefined-variables
 MAKEFLAGS += --no-builtin-rules
 
 PYTHON := python3.9
-SRC := $(shell find tap_mavenlink -type f -name "*.py" -name "*.json")
-TESTS := $(shell find tests -type f -name "*.py" -name "*.json")
+SRC := $(shell find tap_mavenlink -type f -name "*.py" -or -name "*.json")
+TESTS := $(shell find tests -type f -name "*.py")
 VENV := ./.venv
 VENV_DEV := $(VENV)/dev
 VENV_BUILD := $(VENV)/build

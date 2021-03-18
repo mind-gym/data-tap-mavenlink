@@ -3,7 +3,7 @@
 from setuptools import setup, find_packages
 
 setup(name='data-tap-mavenlink',
-      version='0.1.1',
+      version='0.2.0',
       description='Singer.io tap for extracting data from the Mavenlink API',
       author='Fishtown Analytics',
       url='http://fishtownanalytics.com',
@@ -14,7 +14,8 @@ setup(name='data-tap-mavenlink',
       ],
       extras_require={
           'dev': [
-              'pytest'
+              'pytest',
+              'jsonschema'
           ]
       },
       entry_points='''

@@ -2,7 +2,6 @@
 *.venv*
 build*
 tmp*
-*.json
 !*/schemas/*.json
 *.sublime-*
 .python-version

@@ -70,13 +70,15 @@
             "format": "date-time"
         },
         "value": {
-            "type": "array",
-            "items": [
-              {
-                "type": "integer"
-              }
-            ],
-            "additionalItems": true
-				}
+            "anyOf": [
+                {
+                    "type": "array",
+                    "items": { "type": "integer" }
+                },
+                {
+                    "type": "string"
+                }
+            ]
+        }
     }
 }

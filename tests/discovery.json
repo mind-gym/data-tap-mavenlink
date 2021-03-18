@@ -858,7 +858,7 @@
             "schema": {
                 "type": [
                     "null",
-                    "objects"
+                    "object"
                 ],
                 "properties": {
                     "name": {
@@ -5737,13 +5737,17 @@
                         "format": "date-time"
                     },
                     "value": {
-                        "type": "array",
-                        "items": [
+                        "anyOf": [
                             {
-                                "type": "integer"
+                                "type": "array",
+                                "items": {
+                                    "type": "integer"
+                                }
+                            },
+                            {
+                                "type": "string"
                             }
-                        ],
-                        "additionalItems": true
+                        ]
                     }
                 }
             },
@@ -5996,13 +6000,17 @@
                         "format": "date-time"
                     },
                     "value": {
-                        "type": "array",
-                        "items": [
+                        "anyOf": [
                             {
-                                "type": "integer"
+                                "type": "array",
+                                "items": {
+                                    "type": "integer"
+                                }
+                            },
+                            {
+                                "type": "string"
                             }
-                        ],
-                        "additionalItems": true
+                        ]
                     }
                 }
             },

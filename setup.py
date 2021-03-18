@@ -14,7 +14,8 @@ setup(name='data-tap-mavenlink',
       ],
       extras_require={
           'dev': [
-              'pytest'
+              'pytest',
+              'jsonschema'
           ]
       },
       entry_points='''

@@ -70,15 +70,8 @@
             "format": "date-time"
         },
         "value": {
-            "anyOf": [
-                {
-                    "type": "array",
-                    "items": { "type": "integer" }
-                },
-                {
-                    "type": "string"
-                }
-            ]
+            "type": ["null", "string"],
+            "description": "The value applied to the subject."
         }
     }
 }

@@ -42,8 +42,8 @@ clean:
 	rm -rf build
 	rm -rf *.egg-info
 
-## clean-hard              : PHONY, removes virtual environments
-clean-hard:
+## clean-hard              : PHONY, removes sentinel and build files, and virtual environments
+clean-hard: clean
 	rm -rf $(VENV)
 
 # Install

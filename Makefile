@@ -21,18 +21,29 @@ help : Makefile
 	@sed -n 's/^##//p' $<
 
 ## build                   : PHONY, builds distribution
-## upload                  : PHONY, uploads to internal pypiserver
-## test                    : PHONY, runs pytest
 build: tmp/.sentinel.build
+## upload                  : PHONY, uploads to internal pypiserver
 upload: tmp/.sentinel.upload
+## test                    : PHONY, runs pytest
 test: tmp/.sentinel.test
+## discover                : PHONY, runs the tap in discovery mode
+discover: tmp/.sentinel.venv-dev
+	@echo '{'                                 >  fake_config.json
+	echo  '  "token"     : "fake_token",'     >> fake_config.json
+	echo  '  "user_agent": "fake_user_agent"' >> fake_config.json
+	echo  '}'                                 >> fake_config.json
+	$(VENV_DEV)/bin/tap-mavenlink --config fake_config.json --discover
+	rm fake_config.json
 
-## clean                   : PHONY, removes virtual environments
+## clean                   : PHONY, removes sentinel and build files
 clean:
 	rm -rf tmp
 	rm -rf dist
 	rm -rf build
 	rm -rf *.egg-info
+
+## clean-hard              : PHONY, removes virtual environments
+clean-hard:
 	rm -rf $(VENV)
 
 # Install

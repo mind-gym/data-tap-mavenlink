@@ -70,6 +70,10 @@ class BaseStream(base):
 
         while True:
             result = self.client.make_request(url, self.API_METHOD, params=params)
+
+            if result['count'] == 0:
+                break
+
             transformed = self.get_stream_data(result, extra)
 
             with singer.metrics.record_counter(endpoint=table) as counter:

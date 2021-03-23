@@ -74,6 +74,25 @@ class MockIncrementalAPIResponse:
             }
         }
 
+class MockIncrementalAPIResponseNoResults:
+    status_code = 200
+    text = 'foo'
+
+    # mock json() method always returns a specific testing dictionary
+    @staticmethod
+    def json():
+        return {
+            "count": 0,
+            "results": [],
+            "fake_incremental_stream": {},
+            "meta": {
+                "count": 0,
+                "page_count": 0,
+                "page_number": 0,
+                "page_size": 20
+            }
+        }
+
 class MockFullTableAPIResponse:
     status_code = 200
     text = 'bar'
@@ -340,3 +359,29 @@ class TestComponent:
         """{"type": "RECORD", "stream": "fake_full_table_stream", "record": {"updated_at": "2011-01-01T00:00:00Z"}}\n""" + \
         """{"type": "RECORD", "stream": "fake_full_table_stream", "record": {"updated_at": "2012-01-01T00:00:00Z"}}\n""" \
             .strip(), "expect the full stdout to look like this"
+
+    def test_component_incremental_stream_api_response_contains_no_new_results(
+            self, mock_requests, tmp_path, config, catalog, state, capsys, monkeypatch
+    ):
+        # Given - We configure
+        # Tap inputs
+        # catalog.json, config.json, and state.json come from fixtures
+        monkeypatch.setattr(tap_mavenlink, "AVAILABLE_STREAMS", [FakeIncrementalStream])
+
+        # And an API response that contains no results.
+        # This can happen if a table has no new rows since the tap was last run.
+        mock_requests.request.return_value = MockIncrementalAPIResponseNoResults()
+
+        # When
+        # We run the component
+        sys_args = [
+            'tap-mavenlink',
+            '--config', str(tmp_path / constants.CONFIG_FILENAME),
+            '--catalog', str(tmp_path / constants.CATALOG_FILENAME),
+            '--state', str(tmp_path / constants.STATE_FILENAME)
+        ]
+        with patch('sys.argv', sys_args):
+            main()
+
+        # Then
+        # TBC

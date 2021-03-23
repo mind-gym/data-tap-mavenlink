@@ -360,8 +360,6 @@ class TestComponent:
         """{"type": "RECORD", "stream": "fake_full_table_stream", "record": {"updated_at": "2012-01-01T00:00:00Z"}}\n""" \
             .strip(), "expect the full stdout to look like this"
 
-        assert captured.err == "", "expect empty error stream"
-
     def test_component_incremental_stream_api_response_contains_no_new_results(
             self, mock_requests, tmp_path, config, catalog, state, capsys, monkeypatch
     ):
@@ -392,4 +390,3 @@ class TestComponent:
         """{"type": "SCHEMA", "stream": "fake_incremental_stream", "schema": {"properties": {"id": {"type": "string"}, "updated_at": {"format": "date-time", "type": "string"}}, "selected": true}, "key_properties": ["id"]}\n""", \
             "expect the full stdout to look like this"
 
-        assert captured.err == "", "expect empty error stream"
